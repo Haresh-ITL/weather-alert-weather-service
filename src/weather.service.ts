@@ -1,0 +1,48 @@
+import { Injectable } from '@nestjs/common';
+import { Subscription } from './subscription.model';
+import { WeatherPreference } from './weather-preference.model';
+import axios from 'axios';
+
+@Injectable()
+export class WeatherService {
+  async subscribeDealer(dealer_id: string) {
+    return Subscription.create({ dealer_id });
+  }
+
+  async setWeatherPreference(dealer_id: string, countries: string[]) {
+    const existingPreference = await WeatherPreference.findOne({
+      where: { dealer_id }
+    });
+
+    if (existingPreference) {
+      existingPreference.countries = countries;
+      await existingPreference.save();
+      return existingPreference;
+    } else {
+      const newPreference = await WeatherPreference.create({ dealer_id, countries });
+      return newPreference;
+    }
+  }
+
+  async getWeather(country: string, lat: any, lon: any) {
+    const apiKey = process.env.OPENWEATHER_API_KEY || 'YOUR_API_KEY';
+    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+    return response.data;
+  }
+
+  async getWeatherPreferences(dealer_id: string) {
+    const preferences = await WeatherPreference.findAll({
+      where: { dealer_id },
+    });
+
+    if (preferences.length === 0) {
+      return {};
+    }
+
+    const preferenceWithMostCountries = preferences.reduce((prev, current) => {
+      return prev.countries.length > current.countries.length ? prev : current;
+    });
+
+    return preferenceWithMostCountries;
+  }
+}
