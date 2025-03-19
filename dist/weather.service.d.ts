@@ -1,5 +1,5 @@
-import { Subscription } from './subscription.model';
-import { WeatherPreference } from './weather-preference.model';
+import { Subscription } from "./subscription.model";
+import { WeatherPreference } from "./weather-preference.model";
 export declare class WeatherService {
     subscribeDealer(data: {
         dealer_id: string;

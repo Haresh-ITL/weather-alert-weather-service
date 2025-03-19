@@ -22,7 +22,7 @@ let WeatherService = class WeatherService {
     }
     async setWeatherPreference(dealer_id, countries) {
         const existingPreference = await weather_preference_model_1.WeatherPreference.findOne({
-            where: { dealer_id }
+            where: { dealer_id },
         });
         if (existingPreference) {
             existingPreference.countries = countries;
@@ -30,12 +30,15 @@ let WeatherService = class WeatherService {
             return existingPreference;
         }
         else {
-            const newPreference = await weather_preference_model_1.WeatherPreference.create({ dealer_id, countries });
+            const newPreference = await weather_preference_model_1.WeatherPreference.create({
+                dealer_id,
+                countries,
+            });
             return newPreference;
         }
     }
     async getWeather(country, lat, lon) {
-        const apiKey = process.env.OPENWEATHER_API_KEY || 'YOUR_API_KEY';
+        const apiKey = process.env.OPENWEATHER_API_KEY || "YOUR_API_KEY";
         const response = await axios_1.default.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
         return response.data;
     }
@@ -49,7 +52,16 @@ let WeatherService = class WeatherService {
         const preferenceWithMostCountries = preferences.reduce((prev, current) => {
             return prev.countries.length > current.countries.length ? prev : current;
         });
-        return preferenceWithMostCountries;
+        const subscription = await subscription_model_1.Subscription.findOne({
+            where: {
+                dealer_id,
+            },
+        });
+        const isExpired = new Date(subscription.expires_at) <= new Date();
+        return {
+            ...preferenceWithMostCountries,
+            expired: isExpired,
+        };
     }
 };
 exports.WeatherService = WeatherService;

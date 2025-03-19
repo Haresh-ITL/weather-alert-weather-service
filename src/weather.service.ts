@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { Subscription } from './subscription.model';
-import { WeatherPreference } from './weather-preference.model';
-import axios from 'axios';
+import { Injectable } from "@nestjs/common";
+import { Subscription } from "./subscription.model";
+import { WeatherPreference } from "./weather-preference.model";
+import axios from "axios";
+import { Op } from "sequelize";
 
 @Injectable()
 export class WeatherService {
-  async subscribeDealer(data: { 
+  async subscribeDealer(data: {
     dealer_id: string;
     plan_price: number;
     expires_at: string;
@@ -13,14 +14,14 @@ export class WeatherService {
     return Subscription.create({
       dealer_id: data.dealer_id,
       plan_price: data.plan_price,
-      expires_at: new Date(data.expires_at), 
-      is_active: true, 
+      expires_at: new Date(data.expires_at),
+      is_active: true,
     });
   }
 
   async setWeatherPreference(dealer_id: string, countries: string[]) {
     const existingPreference = await WeatherPreference.findOne({
-      where: { dealer_id }
+      where: { dealer_id },
     });
 
     if (existingPreference) {
@@ -28,14 +29,19 @@ export class WeatherService {
       await existingPreference.save();
       return existingPreference;
     } else {
-      const newPreference = await WeatherPreference.create({ dealer_id, countries });
+      const newPreference = await WeatherPreference.create({
+        dealer_id,
+        countries,
+      });
       return newPreference;
     }
   }
 
   async getWeather(country: string, lat: any, lon: any) {
-    const apiKey = process.env.OPENWEATHER_API_KEY || 'YOUR_API_KEY';
-    const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+    const apiKey = process.env.OPENWEATHER_API_KEY || "YOUR_API_KEY";
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
+    );
     return response.data;
   }
 
@@ -52,6 +58,17 @@ export class WeatherService {
       return prev.countries.length > current.countries.length ? prev : current;
     });
 
-    return preferenceWithMostCountries;
+    const subscription = await Subscription.findOne({
+      where: {
+        dealer_id,
+      },
+    });
+
+    const isExpired = new Date(subscription.expires_at) <= new Date();
+
+    return {
+      ...preferenceWithMostCountries,
+      expired: isExpired,
+    };
   }
 }
