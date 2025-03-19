@@ -5,8 +5,17 @@ import axios from 'axios';
 
 @Injectable()
 export class WeatherService {
-  async subscribeDealer(dealer_id: string) {
-    return Subscription.create({ dealer_id });
+  async subscribeDealer(data: { 
+    dealer_id: string;
+    plan_price: number;
+    expires_at: string;
+  }) {
+    return Subscription.create({
+      dealer_id: data.dealer_id,
+      plan_price: data.plan_price,
+      expires_at: new Date(data.expires_at), 
+      is_active: true, 
+    });
   }
 
   async setWeatherPreference(dealer_id: string, countries: string[]) {

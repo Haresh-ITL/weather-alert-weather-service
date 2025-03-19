@@ -4,6 +4,8 @@ export declare class WeatherController {
     constructor(weatherService: WeatherService);
     subscribe(data: {
         dealer_id: string;
+        plan_price: number;
+        expires_at: string;
     }): Promise<import("./subscription.model").Subscription>;
     setPreference(data: {
         dealer_id: string;

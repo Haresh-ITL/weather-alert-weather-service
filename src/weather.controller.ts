@@ -6,8 +6,12 @@ export class WeatherController {
   constructor(private readonly weatherService: WeatherService) { }
 
   @Post('subscribe')
-  async subscribe(@Body() data: { dealer_id: string }) {
-    return this.weatherService.subscribeDealer(data.dealer_id);
+  async subscribe(@Body() data: { 
+    dealer_id: string;
+    plan_price: number;
+    expires_at: string;
+  }) {
+    return this.weatherService.subscribeDealer(data);
   }
 
   @Post('set-preference')

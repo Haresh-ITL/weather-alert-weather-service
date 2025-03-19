@@ -19,7 +19,6 @@ __decorate([
     __metadata("design:type", String)
 ], Subscription.prototype, "id", void 0);
 __decorate([
-    (0, sequelize_typescript_1.ForeignKey)(() => Subscription),
     (0, sequelize_typescript_1.Column)({ allowNull: false }),
     __metadata("design:type", String)
 ], Subscription.prototype, "dealer_id", void 0);
@@ -27,7 +26,23 @@ __decorate([
     (0, sequelize_typescript_1.Column)({ defaultValue: true }),
     __metadata("design:type", Boolean)
 ], Subscription.prototype, "is_active", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.FLOAT, allowNull: false }),
+    __metadata("design:type", Number)
+], Subscription.prototype, "plan_price", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({ type: sequelize_typescript_1.DataType.DATE, allowNull: false }),
+    __metadata("design:type", Date)
+], Subscription.prototype, "expires_at", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({ field: 'created_at', allowNull: false }),
+    __metadata("design:type", Date)
+], Subscription.prototype, "createdAt", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({ field: 'updated_at', allowNull: false }),
+    __metadata("design:type", Date)
+], Subscription.prototype, "updatedAt", void 0);
 exports.Subscription = Subscription = __decorate([
-    (0, sequelize_typescript_1.Table)({ tableName: 'subscriptions' })
+    (0, sequelize_typescript_1.Table)({ tableName: 'subscriptions', timestamps: true })
 ], Subscription);
 //# sourceMappingURL=subscription.model.js.map

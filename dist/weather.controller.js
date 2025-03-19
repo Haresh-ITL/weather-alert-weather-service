@@ -20,7 +20,7 @@ let WeatherController = class WeatherController {
         this.weatherService = weatherService;
     }
     async subscribe(data) {
-        return this.weatherService.subscribeDealer(data.dealer_id);
+        return this.weatherService.subscribeDealer(data);
     }
     async setPreference(data) {
         return this.weatherService.setWeatherPreference(data.dealer_id, data.countries);

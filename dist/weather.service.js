@@ -12,8 +12,13 @@ const subscription_model_1 = require("./subscription.model");
 const weather_preference_model_1 = require("./weather-preference.model");
 const axios_1 = require("axios");
 let WeatherService = class WeatherService {
-    async subscribeDealer(dealer_id) {
-        return subscription_model_1.Subscription.create({ dealer_id });
+    async subscribeDealer(data) {
+        return subscription_model_1.Subscription.create({
+            dealer_id: data.dealer_id,
+            plan_price: data.plan_price,
+            expires_at: new Date(data.expires_at),
+            is_active: true,
+        });
     }
     async setWeatherPreference(dealer_id, countries) {
         const existingPreference = await weather_preference_model_1.WeatherPreference.findOne({
