@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { WeatherService } from './weather.service';
-
+import { JwtAuthGuard } from './jwt-auth.guard';
 @Controller('weather')
 export class WeatherController {
   constructor(private readonly weatherService: WeatherService) { }
@@ -15,6 +15,7 @@ export class WeatherController {
   }
 
   @Post('set-preference')
+  @UseGuards(JwtAuthGuard)
   async setPreference(@Body() data: { dealer_id: string; countries: string[] }) {
     return this.weatherService.setWeatherPreference(data.dealer_id, data.countries);
   }

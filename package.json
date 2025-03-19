@@ -5,6 +5,7 @@
     "@nestjs/platform-express": "^11.0.11",
     "@nestjs/sequelize": "^11.0.0",
     "axios": "^1.8.3",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.6",
@@ -16,5 +17,8 @@
     "build": "nest build",
     "format": "prettier --write 'src/**/*.ts'",
     "lint": "eslint 'src/**/*.ts' --fix"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.9"
   }
 }
