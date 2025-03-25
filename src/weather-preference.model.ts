@@ -6,7 +6,7 @@ export class WeatherPreference extends Model {
   @Column({ primaryKey: true, defaultValue: DataType.UUIDV4 })
   id: string;
 
-  @ForeignKey(() => WeatherPreference)
+
   @Column({ allowNull: false })
   dealer_id: string;
 

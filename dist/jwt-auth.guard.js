@@ -17,7 +17,7 @@ let JwtAuthGuard = class JwtAuthGuard {
             throw new common_1.UnauthorizedException('No token provided');
         }
         try {
-            const decoded = jwt.verify(token, 'SECRET_KEY');
+            const decoded = jwt.verify(token, process.env.SECRET_KEY || 'SECRET_KEY');
             request.user = decoded;
             return true;
         }
